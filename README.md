@@ -20,6 +20,7 @@ Ele criará o arquivo .json com todas as informações dos jogos que será neces
 ## Estrutura do Projeto
 
 - steamAPI
+    - .gitignore 
     - DataTop100SteamGames.py
     - README.md
     - requirements.txt
