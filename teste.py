@@ -184,7 +184,10 @@ if __name__ == "__main__":
 
     # Exibe os dados coletados
     for game in game_data:
-        print(f"\nNome: {game['name']}")
+        print(f"\nNome: {game['name']},"
+              f"\nDescrição: {game['description']},"
+              f"\nURL: {game['url']},")
+
 
 
 
