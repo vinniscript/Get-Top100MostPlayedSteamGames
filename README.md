@@ -8,7 +8,7 @@
     ```
 2. Execute o script 'SteamGameDataScrap.py':
     ```bash
-    python DataTop100SteamGames.py
+    python SteamGameDataScrap.py
     ```
 Ele criará o arquivo .json com todas as informações dos jogos que será necessário para você trabalhar em cima.
 
