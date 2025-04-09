@@ -24,6 +24,44 @@ class SteamGameDataCollector:
         self.screenshot_image_selector = (By.CLASS_NAME, 'highlight_strip_screenshot')
         self.game_description_selector = (By.CLASS_NAME, 'game_description_snippet')
 
+    def scroll_to_load_all(self, loading_indicator_selector=(By.CLASS_NAME, 'search_infinite_scroll_throbber')):
+        """Rola a página até que o indicador de "carregando mais conteúdo" desapareça."""
+        last_height = self.driver.execute_script("return document.body.scrollHeight")
+        scroll_count = 0
+        max_scrolls = 10  # Defina um máximo para evitar loops infinitos
+
+        while scroll_count < max_scrolls:
+            # Rola até o final da página
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+            # Espera um pouco para o conteúdo carregar
+            time.sleep(2)
+
+            # Verifica se o indicador de carregamento ainda está presente
+            try:
+                loading_element = WebDriverWait(self.driver, 5).until(
+                    EC.invisibility_of_element_located(loading_indicator_selector)
+                )
+                # Se o elemento ficou invisível, pode significar que mais conteúdo carregou ou não há mais para carregar
+                new_height = self.driver.execute_script("return document.body.scrollHeight")
+                if new_height == last_height:
+                    print("Fim do conteúdo carregado.")
+                    break  # Não há mais conteúdo sendo carregado
+                last_height = new_height
+            except TimeoutException:
+                # Se o indicador não for encontrado (desapareceu), esperamos um pouco mais e verificamos novamente
+                time.sleep(1)
+                new_height = self.driver.execute_script("return document.body.scrollHeight")
+                if new_height == last_height:
+                    print("Indicador de carregamento não encontrado e altura da página inalterada.")
+                    break
+                last_height = new_height
+
+            scroll_count += 1
+            print(f"Scroll #{scroll_count} realizado.")
+
+        print("Processo de scroll concluído.")
+
     def bypass_age_gate(self, driver):
         try:
             # Seleciona uma data de nascimento que seja maior que 18 anos atrás
@@ -128,48 +166,92 @@ class SteamGameDataCollector:
 
     #def _extract_review_data(self, tooltip_html):
 
-
     def SCRAP_RESULT(self):
-        """Coleta dados dos jogos da página de busca da Steam."""
-        game_data_list = []
+        """Coleta dados dos jogos da página de busca da Steam, rolando infinitamente."""
+        all_game_data = set() # Usar um set para evitar duplicatas
+        scroll_attempts = 0
+        max_scroll_attempts = 10  # Número máximo de tentativas sem novos jogos
+        loaded_count = 0
+
         try:
             self.driver.get(self.base_url)
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(self.game_container_selector)
             )
-            soup_busca = BeautifulSoup(self.driver.page_source, 'html.parser')
-            results_container = soup_busca.find('div', id=self.game_container_selector[1])
 
-            if results_container:
-                game_links = results_container.find_all('a', class_=self.game_link_selector[1])
-                for game_link in game_links:
-                    url = self.get_game_url(game_link)
-                    description = self.get_game_description(url) if url else "Não pegou a descrição"
-                    # Crie um BeautifulSoup separado para cada link
-                    soup_jogo = BeautifulSoup(str(game_link), 'html.parser')
-                    name = self.get_game_name(soup_jogo)
+            while scroll_attempts < max_scroll_attempts:
+                soup_before_scroll = BeautifulSoup(self.driver.page_source, 'html.parser')
+                results_container_before = soup_before_scroll.find('div', id=self.game_container_selector[1])
+                initial_game_count = 0
+                if results_container_before:
+                    game_links_before = results_container_before.find_all('a', class_=self.game_link_selector[1])
+                    initial_game_count = len(game_links_before)
+                    print(f"Número de jogos antes do scroll: {initial_game_count}")
+                else:
+                    print("Contêiner de resultados não encontrado antes do scroll.")
+                    break
 
-                    game_data = {
-                        'name': name,
-                        'description': description,
-                        'url': url
-                    }
-                    game_data_list.append(game_data)
-                    print(f"Coletados dados para: {name}")
+                # Rola até o final da página
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(3)  # Espera o conteúdo carregar
 
-            else:
-                print("Nenhum resultado encontrado na página de busca.")
+                soup_after_scroll = BeautifulSoup(self.driver.page_source, 'html.parser')
+                results_container_after = soup_after_scroll.find('div', id=self.game_container_selector[1])
+                current_game_data = []
+
+                if results_container_after:
+                    game_links = results_container_after.find_all('a', class_=self.game_link_selector[1])
+                    new_games_loaded = False
+                    for game_link in game_links:
+                        url = self.get_game_url(game_link)
+                        if url and not any(data['url'] == url for data in all_game_data):
+                            description = self.get_game_description(url) if url else "Não pegou a descrição"
+                            name = self.get_game_name(BeautifulSoup(str(game_link), 'html.parser'))
+
+                            game_data = {
+                                'name': name,
+                                'description': description,
+                                'url': url
+                            }
+                            current_game_data.append(game_data)
+                            print(f"Coletados dados para: {name}, URL: {url[:50]}, Descrição: {description[:50]}")
+                            new_games_loaded = True
+
+                    if new_games_loaded:
+                        all_game_data.extend(current_game_data)
+                        scroll_attempts = 0  # Resetar as tentativas de scroll
+                        print(f"Mais {len(current_game_data)} jogos carregados. Total coletados: {len(all_game_data)}")
+                    else:
+                        scroll_attempts += 1
+                        print(f"Nenhum jogo novo carregado após o scroll ({scroll_attempts}/{max_scroll_attempts}).")
+
+                else:
+                    print("Contêiner de resultados não encontrado após o scroll.")
+                    break  # Parar se não encontrar o contêiner
+
+                # Verificar se chegamos ao final da página (você pode precisar adaptar essa lógica)
+                current_height = self.driver.execute_script("return document.body.scrollHeight")
+                previous_height = current_height  # Inicializa previous_height na primeira iteração
+                time.sleep(1)
+                if current_height == previous_height and scroll_attempts >= max_scroll_attempts - 1:
+                    print("Possível fim da página.")
+                    break
+                previous_height = current_height  # Atualiza a altura anterior
+
+            print(f"Coleta de dados concluída. Total de {len(all_game_data)} jogos coletados.")
+            return all_game_data
+
         except Exception as e:
-            print(f"Erro ao acessar a página de busca: {e}")
-        return game_data_list
+            print(f"Erro durante a coleta de dados infinita: {e}")
+            return all_game_data
 
 if __name__ == "__main__":
 
     # configuração do Selenium com Firefox
     service = FirefoxService(GeckoDriverManager().install())
     options = FirefoxOptions()
-    options.add_argument('--headless')  # Executa o Firefox em modo headless (sem interface gráfica)
-    #options.add_argument('--no-sandbox')
+    #options.add_argument('--headless')  # Executa o Firefox em modo headless (sem interface gráfica)
+    options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
     # inicializa o driver do Firefox
