@@ -2,18 +2,13 @@
 
 ## Configuração
 
-1. Crie um '.env' na raiz do projeto com as seguintes variáveis de ambiente:
-
-    ```env
-    STEAM_API_KEYSTEAM=sua_chave_aqui
-    ```
-2. Instale as dependências do projeto:
+1. Instale as dependências do projeto:
     ```bash
    pip install -r requirements.txt
     ```
-3. Execute o script 'DataTop100SteamGames.py':
+2. Execute o script 'SteamGameDataScrap.py':
     ```bash
-    python DataTop100SteamGames.py
+    python SteamGameDataScrap.py
     ```
 Ele criará o arquivo .json com todas as informações dos jogos que será necessário para você trabalhar em cima.
 
@@ -21,10 +16,10 @@ Ele criará o arquivo .json com todas as informações dos jogos que será neces
 
 - steamAPI
     - .gitignore 
-    - DataTop100SteamGames.py
     - README.md
+    - SteamGameDataScrap.py
+    - Therads.py
     - requirements.txt
-    - .env
 
 
 ## Desenvolvedores
