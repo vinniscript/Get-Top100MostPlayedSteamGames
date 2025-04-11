@@ -1,3 +1,5 @@
+import UnderstandingThreads
+
 from selenium import webdriver
 from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.firefox.service import Service as FirefoxService
@@ -13,60 +15,62 @@ import json
 
 class SteamGameDataCollector:
     def __init__(self):
-        self.base_url = "https://store.steampowered.com/search/?sort_by=Relevance&max_pages=10" # URL de busca inicial
+        self.base_url = "https://store.steampowered.com/search/?sort_by=Relevance&max_pages=10"
         self.driver = self._setup_driver()
+        self.all_game_data_threaded = []  # Lista compartilhada para os dados dos jogos
+        self.data_lock = threading.Lock()  # Lock para proteger o acesso à lista
 
     def _setup_driver(self):
-        service = FirefoxService(GeckoDriverManager().install())
+        service = FirefoxService(GeckoDriverManager(cache_valid_range=365).install())  # Cache por 365 dias
         options = FirefoxOptions()
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--headless') # Executar sem interface gráfica (opcional)
         return webdriver.Firefox(service=service, options=options)
 
-    def bypass_age_gate(self):
+    def bypass_age_gate_threaded(self, driver):
         try:
-            day_select = Select(WebDriverWait(self.driver, 10).until(
+            day_select = Select(WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, 'ageDay'))
             ))
             day_select.select_by_value('1')
 
-            month_select = Select(WebDriverWait(self.driver, 10).until(
+            month_select = Select(WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, 'ageMonth'))
             ))
             month_select.select_by_value('January')
 
-            year_select = Select(WebDriverWait(self.driver, 10).until(
+            year_select = Select(WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, 'ageYear'))
             ))
             year_select.select_by_value('1990')
 
             view_page_button_selector = (By.ID, 'view_product_page_btn')
             try:
-                view_page_button = WebDriverWait(self.driver, 10).until(
+                view_page_button = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable(view_page_button_selector)
                 )
                 view_page_button.click()
-                print("Página de confirmação de idade bypassada.")
+                print(f"Thread {threading.current_thread().name}: Página de idade bypassada.")
                 return True
             except TimeoutException:
                 view_page_button_selector_class = (By.CLASS_NAME, 'btnv6_blue_hoverfade')
                 try:
-                    view_page_button = WebDriverWait(self.driver, 10).until(
+                    view_page_button = WebDriverWait(driver, 10).until(
                         EC.element_to_be_clickable(view_page_button_selector_class)
                     )
                     view_page_button.click()
-                    print("Página de confirmação de idade bypassada (usando classe).")
+                    print(f"Thread {threading.current_thread().name}: Página de idade bypassada (usando classe).")
                     return True
                 except TimeoutException:
-                    print("Botão 'View Page' não encontrado.")
+                    print(f"Thread {threading.current_thread().name}: Botão 'View Page' não encontrado.")
                     return False
 
         except NoSuchElementException:
-            print("Elementos de seleção de data de nascimento não encontrados")
+            print(f"Thread {threading.current_thread().name}: Elementos de seleção de data não encontrados.")
             return False
         except Exception as e:
-            print(f"Erro ao tentar contornar a página de confirmação de idade: {e}")
+            print(f"Thread {threading.current_thread().name}: Erro ao bypassar idade: {e}")
             return False
 
     def get_game_urls(self):
@@ -88,31 +92,38 @@ class SteamGameDataCollector:
             print(f"Erro ao coletar URLs: {e}")
         return list(urls)
 
-    def get_game_details(self, url):
+    def process_game_url_threaded(self, url):
         game_data = {'name': None, 'description': None, 'url': url}
         try:
-            self.driver.get(url)
-            if "agecheck" in self.driver.current_url:
-                if self.bypass_age_gate():
+            driver = self._setup_driver()  # Criar um driver separado para cada thread (mais seguro)
+            driver.get(url)
+            if "agecheck" in driver.current_url:
+                if self.bypass_age_gate_threaded(driver):  # Adaptar bypass para receber driver
                     time.sleep(2)
                 else:
-                    print(f"Falha ao bypassar a página de idade para {url}")
-                    return game_data
+                    print(f"Falha ao bypassar a página de idade para {url} (thread).")
+                    driver.quit()
+                    return
             time.sleep(2)
-            soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
 
             name_element = soup.find('div', class_='apphub_AppName')
             if name_element:
                 game_data['name'] = name_element.text.strip()
-                print(f"Detalhes obtidos para: {game_data['name']} ({url})")
+                print(f"Thread {threading.current_thread().name}: Detalhes obtidos para: {game_data['name']} ({url})")
 
             desc_element = soup.find('div', class_='game_description_snippet')
             if desc_element:
                 game_data['description'] = desc_element.text.strip()
 
+            driver.quit()  # Fechar o driver da thread
+
+            if game_data['name']:
+                with self.data_lock:
+                    self.all_game_data_threaded.append(game_data)
+
         except Exception as e:
-            print(f"Erro ao obter detalhes de {url}: {e}")
-        return game_data
+            print(f"Thread {threading.current_thread().name}: Erro ao obter detalhes de {url}: {e}")
 
     def save_data(self, data_list, filename="steam_game_data_simple.json"):
         try:
@@ -131,12 +142,14 @@ if __name__ == "__main__":
     game_urls = collector.get_game_urls()
     print(f"Encontradas {len(game_urls)} URLs de jogos.")
 
-    game_data_list = []
+    threads = []
     for url in game_urls:
-        game_details = collector.get_game_details(url)
-        print("Pegando detalhes do jogo:", game_details['name'])
-        if game_details['name']: # Só adiciona se o nome foi encontrado
-            game_data_list.append(game_details)
+        thread = threading.Thread(target=collector.process_game_url_threaded, args=(url,))
+        threads.append(thread)
+        thread.start()
 
-    collector.save_data(game_data_list)
+    for thread in threads:
+        thread.join()
+
+    collector.save_data(collector.all_game_data_threaded, filename="steam_game_data_threaded.json")
     collector.close_driver()
