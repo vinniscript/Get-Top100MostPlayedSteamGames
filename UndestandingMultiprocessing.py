@@ -5,7 +5,7 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
@@ -72,10 +72,41 @@ def bypass_age_gate(driver):
         print(f"Processo {multiprocessing.current_process().pid}: Erro ao tentar bypassar a página de idade: {e}")
         return False
 
+def scrape_game_data(driver, url, process_id, results_queue):
+    """Função para coletar o nome de um jogo da Steam a partir de sua URL."""
+    print(f"    [Processo {process_id}]: Iniciando a coleta para {url}...")
+    try:
+        driver.get(url)
+        time.sleep(5) # Espera a página carregar
+
+        if "agecheck" in driver.current_url:
+            if not bypass_age_gate(driver):
+                print(f"    [Processo {process_id}]: Falha ao bypassar a página de idade para {url}.")
+                results_queue.put({'url': url, 'name': None, 'error': 'Falha no bypass da idade'})
+                return
+
+            time.sleep(3)
+
+        soup = BeautifulSoup(driver.page_sorce, 'lxml')
+        name_element = soup.find('div', class_='apphub_AppName')
+
+        if name_element:
+            game_name = name_element.text.strip()
+            print(f"    [Processo {process_id}]: Nome encontrado: {game_name}")
+            results_queue.put({'url': url, 'name': game_name, 'error': None})
+        else:
+            print(f"    [Processo {process_id}]: Nome não encontrado em {url}")
+            results_queue.put({'url': url, 'name': None, 'error': 'Nome não encontrado'})
+    except (WebDriverException, TimeoutException) as e:
+        print(f"    [Processo {process_id}]: Erro ao acessar ou interagir com {url}: {e}")
+        results_queue.put({'url': url, 'name': None, 'error': str(e)})
+    except Exception as e:
+        print(f"    [Processo {process_id}]: Erro inesperado ao processar {url}: {e}")
+        results_queue.put({'url': url, 'name': None, 'error': str(e)})
+
 def scrape_multiple_games(urls_to_process, process_id, results_queue):
     """
-    Função para coletar dados de múltiplos jogos usando um único webdriver
-    dentro de um processo separado. Com bypass de página de idade.
+    Função para coletar dados de múltiplos jogos com tratamento de erros aprimorado.
     """
     print(f"Processo {process_id}: Iniciando o processamento de {len(urls_to_process)} URLs.")
     driver = get_firefox_driver()
@@ -85,32 +116,37 @@ def scrape_multiple_games(urls_to_process, process_id, results_queue):
 
     try:
         for url in urls_to_process:
-            print(f"    [{process_id}]: Coletando dados de {url}...")
-            driver.get(url)
-            time.sleep(5)
+            print(f"Processo {process_id}: Coletando dados de {url}")
+            try:
+                driver.get(url)
+                time.sleep(5)
 
-            if "agecheck" in driver.current_url:
-                if not bypass_age_gate(driver):
-                    print(f"    Processo {process_id}: Falha ao bypassar a página de idade para {url}.")
-                    continue
+                if "agecheck" in driver.current_url:
+                    if not bypass_age_gate(driver):
+                        print(f"Processo {process_id}: Falha ao bypassar a página de idade para {url}.")
+                        results_queue.put({'url': url, 'name': None, 'error': 'Falha no bypass da idade'})
+                        continue
 
-                    time.sleep(5) # Espera a página carregar após o bypass
+                    time.sleep(3)
 
-            soup = BeautifulSoup(driver.page_source, 'lxml') # Usando lxml como parser
-            name_element = soup.find('div', class_='apphub_AppName')
+                soup = BeautifulSoup(driver.page_source, 'lxml')
+                name_element = soup.find('div', class_='apphub_AppName')
 
-            if name_element:
-                game_name = name_element.text.strip()
-                print(f"Processo {process_id}: Nome do jogo encontrado: {game_name}")
-                results_queue.put({'url': url, 'name': game_name})
-            else:
-                print(f"Processo {process_id}: Nome de jogo não encontrado em {url}")
-                results_queue.put({'url': url, 'name': None})
+                if name_element:
+                    game_name = name_element.text.strip()
+                    print(f"Processo {process_id}: Nome encontrado: {game_name}")
+                    results_queue.put({'url': url, 'name': game_name, 'error': None})
+                else:
+                    print(f"Processo {process_id}: Nome não encontrado em {url}")
+                    results_queue.put({'url': url, 'name': None, 'error': 'Nome não encontrado'})
 
-    except Exception as e:
-        print(f"Processo {process_id}: Erro no processo: {e}")
-        for url in urls_to_process:
-            results_queue.put({'url': url, 'name': None})
+            except (WebDriverException, TimeoutException) as e:
+                print(f"Processo {process_id}: Erro ao acessar ou interagir com {url}: {e}")
+                results_queue.put({'url': url, 'name': None, 'error': str(e)})
+            except Exception as e:
+                print(f"Processo {process_id}: Erro inesperado ao processar {url}: {e}")
+                results_queue.put({'url': url, 'name': None, 'error': str(e)})
+
     finally:
         if driver:
             driver.quit()
