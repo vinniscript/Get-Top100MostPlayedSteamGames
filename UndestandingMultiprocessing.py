@@ -72,6 +72,59 @@ def bypass_age_gate(driver):
         print(f"Processo {multiprocessing.current_process().pid}: Erro ao tentar bypassar a página de idade: {e}")
         return False
 
+def atualizar_html_steam(shared_html):
+    driver = get_firefox_driver() # Sua função para inicializar o driver
+    if driver:
+        try:
+            driver.get("https://store.steampowered.com/?l=brazilian")
+            time.sleep(5)
+            while True:
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(5) # Espera para carregar mais conteúdo
+                shared_html.value = driver.page_source
+                time.sleep(30) # Espera antes da próxima atualização (ajuste conforme necessário)
+        except Exception as e:
+            print(f"Erro no processo de atualização do HTML: {e}")
+        finally:
+            driver.quit()
+
+def get_game_urls_from_steam_store(driver, num_scrolls=1):
+    """
+    Função para coletar URLs de jogos da página principal da Steam, rolando a página.
+
+    Args:
+        driver: A instância do Selenium WebDriver já inicializada.
+        num_scrolls (int): O número de vezes para rolar a página para carregar mais jogos
+
+    Returns:
+        list: Uma lista de URLs de jogos encontradas na página de Steam.
+    """
+
+    game_urls = set()  # Usar um set par eivtar URLs duplicadas
+    try:
+        driver.get("https://store.steampowered.com/search/?sort_by=Relevance&max_pages=10")
+        time.sleep(5) # Espera a página carregar
+
+        for _ in range(num_scrolls):
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(3) # Espera para os novos elementos de jogos chegarem.
+
+        soup = BeautifulSoup(driver.page_source, 'lxml')
+        # Encontra os elementos 'a' que contém os links dos jogos.
+        # A classe 'search_results_row' é comum em páginas de busca, mas na principal pode ser diferente.
+        # Vamos tentar uma classe mais genérica que envolve os links dos jogos na página principal
+        # Inspecione o HTML da página principal da Steam para encontrar a classe correta.
+        link_elements = soup.find('a', class_='search_result_row') # Ajuda a pegar os links dos jogos
+
+        for link in link_elements:
+            href = link.get('href')
+            if href and '/app/' in href:
+                game_urls.add(href.split('?')[0])  # Adiciona a URL ao conjunto, removendo parâmetros extras
+    except Exception as e:
+        print(f"Erro ao coletar URLs da página da Steam: {e}")
+    return list(game_urls)
+
+
 def scrape_game_data(driver, url, process_id, results_queue):
     """Função para coletar o nome de um jogo da Steam a partir de sua URL."""
     print(f"    [Processo {process_id}]: Iniciando a coleta para {url}...")
@@ -155,50 +208,54 @@ def scrape_multiple_games(urls_to_process, process_id, results_queue):
 
 
 if __name__ == "__main__":
-    game_urls_to_scrape = [
+
+    """    
+        game_urls_to_scrape = [
         "https://store.steampowered.com/app/730/CounterStrike_2/",
         "https://store.steampowered.com/app/578080/PUBG_BATTLEGROUNDS/",
         "https://store.steampowered.com/app/440/Team_Fortress_2/",
         "https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/",
         "https://store.steampowered.com/app/1086940/Baldurs_Gate_3/"
     ]
+    """
+
     num_processes = 3 # Número de processos a serem criados, ajuste conforme necessário e seu computer aguentar
-
-    # Pega o total de URLs e aplica uma divisão inteira '//' do número de URLs pelo número de processos, por exemplo
-    # 10 URLs e 3 processos, o resultado é 3, então cada processo vai pegar 3 URLs.
-    chunk_size = len(game_urls_to_scrape) // num_processes + (1 if len(game_urls_to_scrape) % num_processes else 0)
-    # len(game_urls_to_scrape) % num_processes else 0); Calcula o resto da divisão o número total de URLs pelo número de processos '&'
-    # Isso no diz se há alguma URL "sobrando", ou seja, que não foi distruibuída igualmente, como no caso hipotético acima.
-    # No nosso exemplo de 10 URLs e 3 processos, o chunk_size seria 3 + 1 = 4. Isso significa que alguns processos receberão 4 URLs e outros receberão 3 (a divisão não é perfeitamente igual).
-
-    # Divide as URLs em partes iguais para cada processo.
-        # Muito complexo para continuar a explicar via comentários, mas basicamente é o mesmo que o anterior, só que agora estamos pegando o índice final do pedaço de URLs para o processo atual.
-        # Procure IAs
-    url_chunks = [game_urls_to_scrape[i * chunk_size:(i + 1) * chunk_size] for i in range(num_processes)]
-
     results_queue = multiprocessing.Queue()
     processes = []
 
-    for i, urls in enumerate(url_chunks):
-        process_id = i
-        process = multiprocessing.Process(target=scrape_multiple_games, args=(urls, process_id, results_queue))
-        processes.append(process)
-        process.start()
-
-    for process in processes:
-        process.join()
-
-    print("\n--- Resultados da Coleta (de múltiplos jogos por processo) ---")
-    all_results = []
-    while not results_queue.empty():
-        result = results_queue.get()
-        if result and 'name' in result: # Verifica se o resultado é válido e tem a chave 'name'
-            all_results.append(result)
-
-    if all_results:
-        for item in all_results:
-            print(f"URL: {item['url']}, Nome: {item['name']}")
+    # Inicializa o driver principal para coletar as URLs
+    driver_for_urls = get_firefox_driver()
+    if driver_for_urls is None:
+        print("Falha ao inicializar o driver para coletar URLs. Encerrando.")
     else:
-        print("Nenhum dado de jogo foi coletado com sucesso.")
+        # Coleta as URLs dos jogos da página da Steam
+        game_urls_to_scrape = get_game_urls_from_steam_store(driver_for_urls, num_scrolls=2)
+        driver_for_urls.quit() # Fecha o driver após coletar a URLs
 
-    print("\n--- Fim da Execução ---")
+        if game_urls_to_scrape:
+            chunk_size = len(game_urls_to_scrape) // num_processes + (1 if len(game_urls_to_scrape) % num_processes else 0)
+            url_chunks = [game_urls_to_scrape[i * chunk_size:(i + 1) * chunk_size] for i in range(num_processes)]
+
+            for i, urls in enumerate(url_chunks):
+                process_id = i
+                process = multiprocessing.Process(target=scrape_multiple_games, args=(urls, process_id, results_queue))
+                processes.append(process)
+                process.start()
+
+            for process in processes:
+                process.join()
+
+            print("\n--- Resultados da coleta (de múltiplos jogos por processo) ---")
+            all_results = []
+            while not results_queue.empty():
+                result = results_queue.get()
+                if result and 'name' in result:
+                    print(f"URL: {result['url']}, Nome: {result['name']}")
+                elif result and 'error' in result:
+                    print(f"URL: {result['url']}, Erro: {result['error']}")
+                else:
+                    print(f"URL: {result['url']}, Resultado desconhecido. {result}")
+
+            print("\n--- Fim da execução ---")
+        else:
+            print("Nenhuma URL de jogo encontrada na página da steam")

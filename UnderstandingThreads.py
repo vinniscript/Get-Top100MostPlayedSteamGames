@@ -7,12 +7,13 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions # Opç�
 from selenium.webdriver.common.by import By # Módulo para localizar elementos na página
 from bs4 import BeautifulSoup # Biblioteca para analisar o HTML
 
-
+"""
 game_urls_to_scrape = [
     "https://store.steampowered.com/app/730/CounterStrike_2/",
     "https://store.steampowered.com/app/578080/PUBG_BATTLEGROUNDS/",
     "https://store.steampowered.com/app/440/Team_Fortress_2/"
 ]
+"""
 
 def scrape_game_data(url, thread_id, results):
     """
