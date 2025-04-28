@@ -198,7 +198,7 @@ if __name__ == "__main__":
             print(formatted_output)
 
             if url == "https://store.steampowered.com/app/108600/Project_Zomboid/":
-                with open("project_zomboid_page_source.html", "w", encoding="utf-8") as f:
+                with open("Offline - Tests/project_zomboid_page_source.html", "w", encoding="utf-8") as f:
                     f.write(page_source)
                 print("  - Page source saved to project_zomboid_page_source.html")
 
