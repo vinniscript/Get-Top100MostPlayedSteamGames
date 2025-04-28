@@ -78,12 +78,105 @@ def bypass_age_gate(driver):
         return False
 
 
+def extract_vr_support(soup):
+    """Extrai informações de suporte a VR de forma precisa"""
+    # Verifica por menção explícita a VR nas especificações
+    vr_specs = soup.find('div', class_='game_area_details_specs',
+                         string=re.compile(r'VR|Virtual Reality|HTC Vive|Oculus Rift|Valve Index', re.IGNORECASE))
+
+    # Verifica se há uma seção dedicada a VR
+    vr_section = soup.find('a', href=re.compile(r'vr|virtual.reality', re.IGNORECASE))
+
+    # Verifica requisitos de VR
+    vr_requirements = soup.find('div', class_='game_area_sys_req',
+                                string=re.compile(r'VR|Virtual Reality', re.IGNORECASE))
+
+    return bool(vr_specs or vr_section or vr_requirements)
+
+
+def extract_languages(soup):
+    """Extrai idiomas suportados de forma robusta"""
+    languages = {
+        "audio": [],
+        "interface": [],
+        "subtitles": []
+    }
+
+    # Tenta encontrar a tabela de idiomas padrão
+    lang_table = soup.find('table', class_='game_language_options')
+
+    if not lang_table:
+        # Fallback: procura por listas de idiomas alternativas
+        lang_section = soup.find('div', class_='language_section')
+        if lang_section:
+            for item in lang_section.find_all('div', class_='language_item'):
+                lang_name = item.find('div', class_='language_name')
+                if lang_name:
+                    lang = lang_name.get_text(strip=True)
+                    # Verifica quais suportes estão marcados
+                    if item.find('span', class_='check', string='✓'):
+                        if 'audio' in item.get_text().lower():
+                            languages["audio"].append(lang)
+                        elif 'subtitles' in item.get_text().lower():
+                            languages["subtitles"].append(lang)
+                        else:
+                            languages["interface"].append(lang)
+    else:
+        # Processa a tabela padrão de idiomas
+        for row in lang_table.find_all('tr')[1:]:  # Pula o cabeçalho
+            cells = row.find_all('td')
+            if len(cells) >= 4:
+                lang = cells[0].get_text(strip=True)
+                if cells[1].find('span', class_='check'):
+                    languages["interface"].append(lang)
+                if cells[2].find('span', class_='check'):
+                    languages["audio"].append(lang)
+                if cells[3].find('span', class_='check'):
+                    languages["subtitles"].append(lang)
+
+    # Remove idiomas duplicados e vazios
+    for key in languages:
+        languages[key] = sorted(list(set(languages[key])))
+        if not languages[key]:
+            languages[key] = ["Not specified"]
+
+    return languages
+
+
+def clean_description(description_html):
+    """Limpa e formata a descrição removendo tags HTML"""
+    if not description_html:
+        return None
+
+    soup = BeautifulSoup(description_html, 'html.parser')
+
+    # Remove elementos indesejados
+    for element in soup(['script', 'style', 'iframe', 'img', 'link', 'a']):
+        element.decompose()
+
+    # Converte quebras de linha e parágrafos
+    for br in soup.find_all('br'):
+        br.replace_with('\n')
+
+    for p in soup.find_all('p'):
+        p.insert_after('\n\n')
+
+    # Obtém texto limpo
+    clean_text = soup.get_text('\n', strip=True)
+
+    # Remove espaços em branco excessivos
+    clean_text = re.sub(r'\n{3,}', '\n\n', clean_text)
+    clean_text = re.sub(r'[ \t]+', ' ', clean_text)
+
+    return clean_text.strip()
+
+
 def extract_requirements(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     requirements_data = {}
 
     try:
-        # First try to get organized tabs
+        # Primeiro tenta pegar pelos tabs organizados
         sysreq_tabs = soup.find('div', class_='sysreq_tabs')
         if sysreq_tabs:
             for tab in sysreq_tabs.find_all('div', class_='sysreq_tab'):
@@ -94,7 +187,7 @@ def extract_requirements(html_content):
                     content = soup.find('div', class_='game_area_sys_req', attrs={'data-os': os})
 
                     if content:
-                        # Try to find requirements organized in columns
+                        # Tenta encontrar os requisitos organizados em colunas
                         left_col = content.find('div', class_='game_area_sys_req_leftCol')
                         right_col = content.find('div', class_='game_area_sys_req_rightCol')
 
@@ -110,11 +203,11 @@ def extract_requirements(html_content):
                                 if not any(x in li.get_text().lower() for x in ['expansion', 'soundtrack', 'artbook'])
                             ]
 
-                        # If no columns found, look for full block
+                        # Se não encontrou colunas, procura o bloco completo
                         if not left_col and not right_col:
                             full_div = content.find('div', class_='game_area_sys_req_full')
                             if full_div:
-                                # Split minimum and recommended by text
+                                # Separa mínimo e recomendado pelo texto
                                 parts = re.split(r'(minimum:|recommended:)', full_div.get_text(), flags=re.IGNORECASE)
                                 current = None
                                 for part in parts:
@@ -126,20 +219,20 @@ def extract_requirements(html_content):
                                     elif current and part:
                                         requirements_data[os][current].append(part)
 
-        # If no organized tabs found, look in generic lists
+        # Se não encontrou tabs organizados, procura em listas genéricas
         if not requirements_data:
             current_os = 'unknown'
             current_category = 'minimum'
             requirements_data[current_os] = {'minimum': [], 'recommended': []}
 
-            # Look in requirements lists
+            # Procura em listas de requisitos
             for elem in soup.find_all(['ul', 'div'], class_=['bb_ul', 'game_area_sys_req_full']):
                 for item in elem.find_all(['li', 'p', 'strong']):
                     text = item.get_text(" ", strip=True)
                     if not text:
                         continue
 
-                    # Detect category change
+                    # Detecta mudança de categoria
                     if re.search(r'minimum:', text, re.IGNORECASE):
                         current_category = 'minimum'
                         text = re.sub(r'minimum:', '', text, flags=re.IGNORECASE).strip()
@@ -147,7 +240,7 @@ def extract_requirements(html_content):
                         current_category = 'recommended'
                         text = re.sub(r'recommended:', '', text, flags=re.IGNORECASE).strip()
 
-                    # Detect OS change
+                    # Detecta mudança de OS
                     os_match = re.search(r'(windows|mac|linux|steam os|os)', text, re.IGNORECASE)
                     if os_match and ':' in text:
                         current_os = os_match.group(1).lower()
@@ -155,7 +248,7 @@ def extract_requirements(html_content):
                             requirements_data[current_os] = {'minimum': [], 'recommended': []}
                         text = text.split(':', 1)[1].strip()
 
-                    # Add if valid requirement
+                    # Adiciona se for um requisito válido
                     if text and len(text.split()) > 2 and not any(
                             x in text.lower() for x in ['expansion', 'soundtrack', 'artbook']):
                         requirements_data[current_os][current_category].append(text)
@@ -168,10 +261,10 @@ def extract_requirements(html_content):
 
 
 def extract_platforms(soup):
-    """Extract supported platforms more robustly"""
+    """Extrai plataformas suportadas de forma robusta"""
     platforms = set()
 
-    # 1. Check requirement tabs
+    # 1. Verifica pelos tabs de requisitos
     sysreq_tabs = soup.find('div', class_='sysreq_tabs')
     if sysreq_tabs:
         for tab in sysreq_tabs.find_all('div', class_='sysreq_tab'):
@@ -183,7 +276,7 @@ def extract_platforms(soup):
             elif os == 'linux':
                 platforms.add('linux')
 
-    # 2. Check platform icons
+    # 2. Verifica por ícones de plataforma
     platform_icons = soup.find_all('div', class_='platform_img')
     for icon in platform_icons:
         class_list = icon.get('class', [])
@@ -194,9 +287,9 @@ def extract_platforms(soup):
         if 'linux' in class_list:
             platforms.add('linux')
         if 'steamplay' in class_list:
-            platforms.add('linux')  # Steam Play usually indicates Linux support
+            platforms.add('linux')  # Steam Play geralmente indica suporte Linux
 
-    # 3. Check page text
+    # 3. Verifica por texto na página
     page_text = soup.get_text().lower()
     if 'windows' in page_text:
         platforms.add('windows')
@@ -209,7 +302,7 @@ def extract_platforms(soup):
 
 
 def extract_review_details(soup):
-    """Extract detailed review information including positive/negative counts"""
+    """Extrai informações detalhadas das reviews"""
     review_data = {
         "summary": None,
         "score": None,
@@ -219,15 +312,15 @@ def extract_review_details(soup):
         "rating": None
     }
 
-    # Extract from the review summary block
+    # Extrai do bloco de reviews
     review_block = soup.find('div', class_='user_reviews')
     if review_block:
-        # Overall summary
+        # Resumo geral
         summary = review_block.find('span', class_='game_review_summary')
         if summary:
             review_data["summary"] = summary.get_text(strip=True)
 
-        # Score and total reviews
+        # Score e total de reviews
         score = review_block.find('meta', itemprop='ratingValue')
         if score:
             review_data["score"] = score.get('content')
@@ -236,14 +329,14 @@ def extract_review_details(soup):
         if count:
             review_data["total"] = count.get('content')
 
-        # Detailed positive/negative breakdown
+        # Detalhes positivos/negativos
         rating_text = review_block.get_text()
         positive_match = re.search(r'(\d+%?) of the (\d[\d,]+) user reviews', rating_text)
         if positive_match:
             review_data["positive"] = positive_match.group(1)
             review_data["total"] = positive_match.group(2).replace(',', '')
 
-        # New Steam review format
+        # Formato novo de reviews da Steam
         review_summary = review_block.find('div', class_='summary_section')
         if review_summary:
             rating_text = review_summary.get_text()
@@ -256,9 +349,9 @@ def extract_review_details(soup):
 
 
 def extract_game_data(driver, url):
-    """Complete game data extractor with all requested fields"""
+    """Extrai todos os dados relevantes de uma página de jogo na Steam"""
     try:
-        # Verify and extract app_id from URL
+        # Verificação e extração do app_id
         parsed_url = urlparse(url)
         if not parsed_url.path.startswith('/app/'):
             print(f"  - Invalid Steam app URL: {url}")
@@ -269,7 +362,7 @@ def extract_game_data(driver, url):
             print(f"  - Invalid App ID in URL: {url}")
             return None
 
-        # Access page and bypass age gate
+        # Acessa a página e verifica age gate
         driver.get(url)
         if not bypass_age_gate(driver):
             print(f"  - Could not bypass age gate for {url}")
@@ -277,7 +370,7 @@ def extract_game_data(driver, url):
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # Complete data structure
+        # Estrutura completa dos dados
         game_data = {
             "basic_info": {
                 "app_id": app_id,
@@ -293,11 +386,7 @@ def extract_game_data(driver, url):
             "metadata": {
                 "genres": [],
                 "popular_tags": [],
-                "languages": {
-                    "audio": [],
-                    "interface": [],
-                    "subtitles": []
-                }
+                "languages": {}
             },
             "content": {
                 "short_description": None,
@@ -317,13 +406,13 @@ def extract_game_data(driver, url):
             "timestamp": datetime.now(pytz.utc).isoformat()
         }
 
-        # 1. Basic Info
-        # Title
+        # 1. Informações Básicas
+        # Título
         title_elem = soup.find('div', id='appHubAppName') or soup.find('div', class_='apphub_AppName')
         if title_elem:
             game_data["basic_info"]["title"] = title_elem.get_text(strip=True)
 
-        # Developers and Publishers
+        # Desenvolvedores e Publicadoras
         dev_rows = soup.find_all('div', class_='dev_row')
         for row in dev_rows:
             label = row.find('b').get_text(strip=True).lower() if row.find('b') else ""
@@ -332,12 +421,12 @@ def extract_game_data(driver, url):
             elif 'publisher' in label:
                 game_data["basic_info"]["publishers"] = [a.get_text(strip=True) for a in row.find_all('a')]
 
-        # Release Date
+        # Data de lançamento
         date_elem = soup.find('div', class_='date')
         if date_elem:
             game_data["basic_info"]["release_date"] = date_elem.get_text(strip=True)
 
-        # Price
+        # Preço
         price_data = {}
         discount_block = soup.find('div', class_='discount_block')
         if discount_block:
@@ -364,60 +453,49 @@ def extract_game_data(driver, url):
 
         game_data["basic_info"]["price"] = price_data
 
-        # Reviews - Enhanced version
+        # Avaliações
         game_data["basic_info"]["review_score"] = extract_review_details(soup)
 
-        # 2. System Requirements
+        # 2. Requisitos do Sistema
         game_data["system_requirements"] = extract_requirements(driver.page_source)
 
-        # 3. Metadata
-        # Genres
+        # 3. Metadados
+        # Gêneros
         game_data["metadata"]["genres"] = [
             genre.get_text(strip=True) for genre in soup.select('div.details_block a[href*="/genre/"]')
         ]
 
-        # Popular Tags (limit to 20)
+        # Tags populares (limite de 20)
         game_data["metadata"]["popular_tags"] = [
                                                     tag.get_text(strip=True) for tag in
                                                     soup.select('div.glance_tags.popular_tags a')
                                                 ][:20]
 
-        # Languages
-        lang_table = soup.find('table', class_='game_language_options')
-        if lang_table:
-            for row in lang_table.find_all('tr')[1:]:  # Skip header
-                cells = row.find_all('td')
-                if len(cells) >= 4:
-                    lang = cells[0].get_text(strip=True)
-                    if cells[1].find('span', class_='check'):
-                        game_data["metadata"]["languages"]["interface"].append(lang)
-                    if cells[2].find('span', class_='check'):
-                        game_data["metadata"]["languages"]["audio"].append(lang)
-                    if cells[3].find('span', class_='check'):
-                        game_data["metadata"]["languages"]["subtitles"].append(lang)
+        # Idiomas
+        game_data["metadata"]["languages"] = extract_languages(soup)
 
-        # 4. Content
-        # Short Description
+        # 4. Conteúdo
+        # Descrição curta
         short_desc = soup.find('div', class_='game_description_snippet')
         if short_desc:
             game_data["content"]["short_description"] = short_desc.get_text(strip=True)
 
-        # Detailed Description
+        # Descrição detalhada (formatada)
         detailed_desc = soup.find('div', class_='game_area_description')
         if detailed_desc:
-            game_data["content"]["detailed_description"] = str(detailed_desc)
+            game_data["content"]["detailed_description"] = clean_description(str(detailed_desc))
 
-        # DLC Count
+        # Contagem de DLCs
         dlc_items = soup.select('div.dlc_item')
         if dlc_items:
             game_data["content"]["dlc_count"] = len(dlc_items)
 
-        # 5. Media
-        # Header Image
+        # 5. Mídia
+        # Banner principal
         header_img = soup.find('img', class_='game_header_image_full')
         if header_img:
             game_data["media"]["header_image"] = header_img.get('src')
-            # Background color from style if exists
+            # Cor de fundo do estilo se existir
             style = header_img.get('style', '')
             if 'background-color:' in style:
                 game_data["media"]["background_color"] = style.split('background-color:')[-1].split(';')[0].strip()
@@ -429,21 +507,18 @@ def extract_game_data(driver, url):
                 img.get('src').replace('116x65', '1920x1080') for img in screenshots
             ]
 
-        # 6. Technical Info
-        # Platforms
+        # 6. Informações Técnicas
+        # Plataformas
         game_data["technical"]["platforms"] = extract_platforms(soup)
 
-        # Controller Support
+        # Suporte a controle
         if soup.find('div', class_='game_area_details_specs', string=re.compile('Full Controller Support')):
             game_data["technical"]["controller_support"] = "Full"
         elif soup.find('div', class_='game_area_details_specs', string=re.compile('Partial Controller Support')):
             game_data["technical"]["controller_support"] = "Partial"
 
-        # VR Support
-        game_data["technical"]["vr_support"] = bool(
-            soup.find('div', class_='game_area_details_specs', string=re.compile('VR')) or
-            soup.find('a', href=re.compile('vr', re.IGNORECASE))
-        )
+        # Suporte a VR
+        game_data["technical"]["vr_support"] = extract_vr_support(soup)
 
         return game_data
 
@@ -476,11 +551,11 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"  - Error saving file: {e}")
 
-        time.sleep(5)  # Larger interval to avoid blocks
+        time.sleep(5)  # Intervalo maior para evitar bloqueios
 
     driver.quit()
 
-    # Save all data to single file
+    # Salva todos os dados em um único arquivo
     with open("all_steam_games_data.json", 'w', encoding='utf-8') as f:
         json.dump(all_games_data, f, indent=2, ensure_ascii=False)
 
