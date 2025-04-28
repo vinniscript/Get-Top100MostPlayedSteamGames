@@ -1,0 +1,380 @@
+[
+  {
+    "basic_info": {
+      "app_id": "730",
+      "url": "https://store.steampowered.com/app/730/CounterStrike_2/",
+      "title": "Counter-Strike 2",
+      "developers": [
+        "Valve"
+      ],
+      "publishers": [
+        "Valve"
+      ],
+      "release_date": "21 Aug, 2012",
+      "price": {
+        "current": "Your Price:R$ 366,50"
+      },
+      "review_score": {
+        "summary": "Very Positive",
+        "score": "9",
+        "total": "75682",
+        "positive": "82%",
+        "negative": null,
+        "rating": null
+      }
+    },
+    "system_requirements": {
+      "win": {
+        "minimum": [
+          "OS: Windows® 10Processor: 4 hardware CPU threads - Intel® Core™ i5 750 or higherMemory: 8 GB RAMGraphics: Video card must be 1 GB or more and should be a DirectX 11-compatible with support for Shader Model 5.0DirectX: Version 11Storage: 85 GB available space"
+        ],
+        "recommended": []
+      },
+      "linux": {
+        "minimum": [
+          "OS: Ubuntu 20.04Processor: 4 hardware CPU threads - Intel® Core™ i5 750 or higherMemory: 8 GB RAMGraphics: AMD GCN+ or NVIDIA Kepler+ with up-to-date Vulkan drivers.  Support for VK_EXT_graphics_pipeline_library highly recommended.Storage: 85 GB available spaceSound Card: Highly recommended"
+        ],
+        "recommended": []
+      }
+    },
+    "metadata": {
+      "genres": [
+        "Action",
+        "Free To Play"
+      ],
+      "popular_tags": [
+        "FPS",
+        "Shooter",
+        "Multiplayer",
+        "Competitive",
+        "Action",
+        "Team-Based",
+        "eSports",
+        "Tactical",
+        "First-Person",
+        "PvP",
+        "Online Co-Op",
+        "Co-op",
+        "Strategy",
+        "Military",
+        "War",
+        "Difficult",
+        "Trading",
+        "Realistic",
+        "Fast-Paced",
+        "Moddable"
+      ],
+      "languages": {
+        "audio": [],
+        "interface": [],
+        "subtitles": []
+      }
+    },
+    "content": {
+      "short_description": "For over two decades, Counter-Strike has offered an elite competitive experience, one shaped by millions of players from across the globe. And now the next chapter in the CS story is about to begin. This is Counter-Strike 2.",
+      "detailed_description": "<div class=\"game_area_description\" id=\"game_area_description\">\n<h2>About This Game</h2>\n\t\t\t\t\t\t\tFor over two decades, Counter-Strike has offered an elite competitive experience, one shaped by millions of players from across the globe. And now the next chapter in the CS story is about to begin. This is Counter-Strike 2.<br/><br/>A free upgrade to CS:GO, Counter-Strike 2 marks the largest technical leap in Counter-Strike’s history. Built on the Source 2 engine, Counter-Strike 2 is modernized with realistic physically-based rendering, state of the art networking, and upgraded Community Workshop tools.<br/><br/>In addition to the classic objective-focused gameplay that Counter-Strike pioneered in 1999, Counter-Strike 2 features:<br/><br/><ul class=\"bb_ul\"><li>All-new CS Ratings with the updated Premier mode<br/></li><li>Global and Regional leaderboards<br/></li><li>Upgraded and overhauled maps<br/></li><li>Game-changing dynamic smoke grenades<br/></li><li>Tick-rate-independent gameplay<br/></li><li>Redesigned visual effects and audio<br/></li><li>All items from CS:GO moving forward to CS2</li></ul> </div>",
+      "dlc_count": 0
+    },
+    "media": {
+      "header_image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/header.jpg?t=1745368595",
+      "screenshots": [
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_796601d9d67faf53486eeb26d0724347cea67ddc.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_d830cfd0550fbb64d80e803e93c929c3abb02056.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_13bb35638c0267759276f511ee97064773b37a51.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_0f8cf82d019c614760fd20801f2bb4001da7ea77.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_ef82850f036dac5772cb07dbc2d1116ea13eb163.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_76f6730dbb911650ba1f41c8e5b4bac638b5beea.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_808cdd373d78c3cf3a78e7026ebb1a15895e0670.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_ef98db5d5a4d877531a5567df082b0fb62d75c80.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_2254a50f27951fb9028bc00b93a7f2ed7aac1e13.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_54b9c26b028c84d5f8a5316f31ae6203953ed84d.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_1b3b5fd437939a7ed00a2155269e78994cb998d3.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_352666c1949ce3966bd966d6ea5a1afd532257bc.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_63d2733b9b4ace01a41d5ba8afd653245d05d54a.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_fe70d46859593aef623a0614f4686e2814405035.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_bb2af3e83ac0385ff2055f2ab9697cdd83e351b7.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_fb8e5e2ae29ce64e2898315c66b5db08989e8f91.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_0db84c628a798e38ca57d69abda119bee1358008.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_18e9ea2715f0407ee05e206073927a648db60d73.1920x1080.jpg?t=1745368595",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/ss_2514675f364079b754b820cbc8b2e7c331d56a26.1920x1080.jpg?t=1745368595"
+      ],
+      "background_color": null
+    },
+    "technical": {
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "controller_support": null,
+      "vr_support": true
+    },
+    "timestamp": "2025-04-28T19:53:51.080487+00:00"
+  },
+  {
+    "basic_info": {
+      "app_id": "1086940",
+      "url": "https://store.steampowered.com/app/1086940/Baldurs_Gate_3/",
+      "title": "Baldur's Gate 3",
+      "developers": [
+        "Larian Studios"
+      ],
+      "publishers": [
+        "Larian Studios"
+      ],
+      "release_date": "3 Aug, 2023",
+      "price": {
+        "current": "R$ 199,99",
+        "original": null,
+        "discount_pct": 0
+      },
+      "review_score": {
+        "summary": "Overwhelmingly Positive",
+        "score": "10",
+        "total": "9881",
+        "positive": "96%",
+        "negative": null,
+        "rating": null
+      }
+    },
+    "system_requirements": {
+      "win": {
+        "minimum": [
+          "Requires a 64-bit processor and operating system",
+          "OS: Windows 10 64-bit",
+          "Processor: Intel I5 4690 / AMD FX 8350",
+          "Memory: 8 GB RAM",
+          "Graphics: Nvidia GTX 970 / RX 480 (4GB+ of VRAM)",
+          "DirectX: Version 11",
+          "Storage: 150 GB available space",
+          "Additional Notes: SSD required"
+        ],
+        "recommended": [
+          "Requires a 64-bit processor and operating system",
+          "OS: Windows 10 64-bit",
+          "Processor: Intel i7 8700K / AMD r5 3600",
+          "Memory: 16 GB RAM",
+          "Graphics: Nvidia 2060 Super / RX 5700 XT (8GB+ of VRAM)",
+          "DirectX: Version 11",
+          "Storage: 150 GB available space",
+          "Additional Notes: SSD required"
+        ]
+      },
+      "mac": {
+        "minimum": [
+          "OS: macOS 14.7.1 or newer",
+          "Processor: Apple M1",
+          "Memory: 8 GB RAM",
+          "Graphics: Apple M1",
+          "Storage: 150 GB available space",
+          "Additional Notes: Min specs can run the game on low to medium settings. Splitscreen will not run at an acceptable level of performance. SSD required."
+        ],
+        "recommended": [
+          "OS: Latest macOS",
+          "Processor: Apple M1 Pro or better",
+          "Memory: 16 GB RAM",
+          "Graphics: Apple M1 Pro or better",
+          "Storage: 150 GB available space",
+          "Additional Notes: Recommended specs can run the game on high or ultra settings. SSD required."
+        ]
+      }
+    },
+    "metadata": {
+      "genres": [
+        "Adventure",
+        "RPG",
+        "Strategy"
+      ],
+      "popular_tags": [
+        "RPG",
+        "Character Customization",
+        "Choices Matter",
+        "Story Rich",
+        "Turn-Based Combat",
+        "Dungeons & Dragons",
+        "CRPG",
+        "Fantasy",
+        "Adventure",
+        "Sexual Content",
+        "Romance",
+        "Online Co-Op",
+        "Multiplayer",
+        "Strategy",
+        "Singleplayer",
+        "Co-op Campaign",
+        "Class-Based",
+        "Nudity",
+        "Dark Fantasy",
+        "Combat"
+      ],
+      "languages": {
+        "audio": [],
+        "interface": [],
+        "subtitles": []
+      }
+    },
+    "content": {
+      "short_description": "Baldur’s Gate 3 is a story-rich, party-based RPG set in the universe of Dungeons & Dragons, where your choices shape a tale of fellowship and betrayal, survival and sacrifice, and the lure of absolute power.",
+      "detailed_description": "<div class=\"game_area_description\" id=\"game_area_description\">\n<h2>About This Game</h2>\n<div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/Final_Keyart_BG3.gif?t=1744744220\"/></div><br/><br/>Gather your party and return to the Forgotten Realms in a tale of fellowship and betrayal, sacrifice and survival, and the lure of absolute power.<br/><br/>Mysterious abilities are awakening inside you, drawn from a mind flayer parasite planted in your brain. Resist, and turn darkness against itself. Or embrace corruption, and become ultimate evil.<br/><br/>From the creators of Divinity: Original Sin 2 comes a next-generation RPG, set in the world of Dungeons &amp; Dragons.<br/><br/><br/><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/Gather_new.gif?t=1744744220\"/></div><br/><br/>Choose from 12 classes and 11 races from the D&amp;D Player's Handbook and create your own identity, or play as an Origin hero with a hand-crafted background. Or tangle with your inner corruption as the Dark Urge, a fully customisable Origin hero with its own unique mechanics and story. Whoever you choose to be, adventure, loot, battle and romance your way across the Forgotten Realms and beyond. Gather your party. Take the adventure online as a party of up to four. <br/><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/An_expansive_original_story.png?t=1744744220\"/></div><br/><br/>Abducted, infected, lost. You are turning into a monster, but as the corruption inside you grows, so does your power. That power may help you to survive, but there will be a price to pay, and more than any ability, the bonds of trust that you build within your party could be your greatest strength. Caught in a conflict between devils, deities, and sinister otherworldly forces, you will determine the fate of the Forgotten Realms together.<br/><br/><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/Next_Gen_new.gif?t=1744744220\"/></div><br/><br/>Forged with the new Divinity 4.0 engine, Baldur’s Gate 3 gives you unprecedented freedom to explore, experiment, and interact with a thriving world filled with characters, dangers, and deceit. A grand, cinematic narrative brings you closer to your characters than ever before. From shadow-cursed forests, to the magical caverns of the Underdark, to the sprawling city of Baldur’s Gate itself, your actions define the adventure, but your choices define your legacy. You will be remembered.  <br/><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/Experience_Depth.png?t=1744744220\"/></div><br/><br/>The Forgotten Realms are a vast, detailed, and diverse world, and there are secrets to be discovered all around you – verticality is a vital part of exploration. Sneak, dip, shove, climb, and jump as you journey from the depths of the Underdark to the glittering rooftops of Baldur’s Gate. Every choice you make drives your story forward, each decision leaving your mark on the world. Define your legacy, nurture relationships and create enemies, and solve problems your way. No two playthroughs will ever be the same.<br/><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/01_Bullets_points.png?t=1744744220\"/></div><br/><ul class=\"bb_ul\">allows you to combine your forces in combat and simultaneously attack enemies, or split your party to each follow your own quests and agendas. Concoct the perfect plan together… or introduce an element of chaos when your friends least expect it. Relationships are complicated. Especially when you’ve got a parasite in your brain. </ul><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/02_Bullets_points.png?t=1744744220\"/></div><br/><ul class=\"bb_ul\">7 unique Origin heroes offer a hand-crafted experience, each with their own unique traits, agenda, and outlook on the world. Their stories intersect with the overarching narrative, and your choices will determine whether those stories end in redemption, salvation, domination, or one of many other outcomes. Play as an Origin and enjoy their stories, or recruit them to fight alongside you. </ul><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/03_Bullets_points.png?t=1744744220\"/></div> <br/><ul class=\"bb_ul\">based on the D&amp;D 5e ruleset. Team-based initiative, advantage and disadvantage, and roll modifiers join an advanced AI, expanded environmental interactions, and a new fluidity in combat that rewards strategy and foresight. Three difficulty settings allow you to customise the challenge of combat. Enable weighted dice to help sway the battle, or play on Tactician mode for a hardcore experience.  </ul><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/04_Bullets_points_Unprecedented.png?t=1744744220\"/></div> <br/><ul class=\"bb_ul\">featuring 31 subraces on top of the 11 races (Human, Githyanki, Half-Orc, Dwarf, Elf, Drow, Tiefling, Halfling, Half Elf, Gnome, Dragonborn), with 46 subclasses branching out of the 12 classes. Over 600 spells and actions offer near-limitless freedom of interactivity in a hand-crafted world where exploration is rewarded, and player agency defines the journey. Our unique Character Creator features unprecedented depth of character, with reactivity that ensures whomever you are, you will leave a unique legacy behind you, all the way up to Level 12. Over 174 hours of cinematics ensure that no matter the choices you make, the cinematic experience follows your journey – every playthrough, a new cinematic journey. </ul><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/05_Bullets_points_Romances.png?t=1744744220\"/></div> <br/><ul class=\"bb_ul\">With the looming threat of war heading to Baldur’s Gate, and a mind flayer invasion on the horizon, friendships – though not necessary – are bound to be forged on your journey. What becomes of them is up to you, as you enter real, vibrant relationships with those you meet along the way. Each companion has their own moral compass and will react to the choices you make throughout your journey. At what cost will you stick to your ideals? Will you allow love to shape your actions? The relationships made on the road to Baldur’s Gate act as moments of respite at camp as much as they add weight to the many decisions you make on your adventure. </ul> <br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/06_Bullets_points_Customise.png?t=1744744220\"/></div> <br/><ul class=\"bb_ul\">so that when you hit ‘go live’, your stream isn’t interrupted by a bear, swear, or lack of underwear. Baldur’s Gate 3 has 3 different levels of streamer-friendly customisation. You can disable nudity and explicit content separately (or together), and you can enable Twitch integration to interact directly with your audience, just as we do at our Panel From Hell showcases! You’ll be able to stream Baldur’s Gate 3 without any problems, regardless of how you play, thanks to these options.  </ul><br/><div class=\"bb_wide_img_ctn\"><img class=\"bb_img\" src=\"https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/extras/Final_Image_new.gif?t=1744744220\"/></div> </div>",
+      "dlc_count": 0
+    },
+    "media": {
+      "header_image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/6b6b46089067683cecf6acfc92b39fc4c72e3fac/header.jpg?t=1744744220",
+      "screenshots": [
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_c73bc54415178c07fef85f54ee26621728c77504.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_73d93bea842b93914d966622104dcb8c0f42972b.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_cf936d31061b58e98e0c646aee00e6030c410cda.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_b6a6ee6e046426d08ceea7a4506a1b5f44181543.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_6b8faba0f6831a406ce015648958da9612d14dbb.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_8fc5eba770b4a1639b31666908bdd2bbc1aa2ae4.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_31c13d137706fb4d9a4210513274a3ed9c3c7c96.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_0efa1a469a37beeb4fd0cb8e16dc99bd36357dc4.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_387896248b42a15239a9256844b3e4bff72fbc2a.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_44d30da9c3e4622b46f2978e89bda0515856eaf4.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_f8c7fcdeccbfe77e3fad33330a464fed30f781f0.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_332cd26db210d4b10df744485ecf0a9b3f2e9024.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_b9f6f2d2ac2b7b2fe63d776e8e13c24b481a7b19.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_2c576a8e563e3338826268f172c9032c84366d16.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_d0b50351676da10c5403ec904cf7582636e65346.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_74d11c230ebb44ff9a69b4533a7333551d5bfc6c.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_1c3ff278ac430948dc31efeb1f7d2bb0466a1493.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_49168eeefdfb6e6030a5aed3fd7c1a83da870a9f.1920x1080.jpg?t=1744744220",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1086940/ss_3cc4e8cfcfb8a91d19d96f631f076d252ba2c0c4.1920x1080.jpg?t=1744744220"
+      ],
+      "background_color": null
+    },
+    "technical": {
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "controller_support": null,
+      "vr_support": true
+    },
+    "timestamp": "2025-04-28T19:54:01.510497+00:00"
+  },
+  {
+    "basic_info": {
+      "app_id": "1245620",
+      "url": "https://store.steampowered.com/app/1245620/ELDEN_RING/",
+      "title": "ELDEN RING",
+      "developers": [
+        "FromSoftware, Inc."
+      ],
+      "publishers": [
+        "FromSoftware, Inc.",
+        "Bandai Namco Entertainment"
+      ],
+      "release_date": "24 Feb, 2022",
+      "price": {
+        "current": "R$ 229,90",
+        "original": null,
+        "discount_pct": 0
+      },
+      "review_score": {
+        "summary": "Very Positive",
+        "score": "9",
+        "total": "6443",
+        "positive": "92%",
+        "negative": null,
+        "rating": null
+      }
+    },
+    "system_requirements": {
+      "unknown": {
+        "minimum": [
+          "Requires a 64-bit processor and operating system"
+        ],
+        "recommended": []
+      },
+      "os": {
+        "minimum": [
+          "Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X",
+          "Memory: 12 GB RAM",
+          "Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB",
+          "DirectX: Version 12",
+          "Storage: 60 GB available space",
+          "Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X",
+          "Memory: 16 GB RAM",
+          "Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB",
+          "DirectX: Version 12",
+          "Storage: 60 GB available space"
+        ],
+        "recommended": []
+      },
+      "windows": {
+        "minimum": [
+          "Windows Compatible Audio Device",
+          "Requires a 64-bit processor and operating system",
+          "Windows Compatible Audio Device"
+        ],
+        "recommended": []
+      }
+    },
+    "metadata": {
+      "genres": [
+        "Action",
+        "RPG"
+      ],
+      "popular_tags": [
+        "Souls-like",
+        "Open World",
+        "Dark Fantasy",
+        "RPG",
+        "Difficult",
+        "Action RPG",
+        "Third Person",
+        "Multiplayer",
+        "Fantasy",
+        "Singleplayer",
+        "Online Co-Op",
+        "Action",
+        "Co-op",
+        "Atmospheric",
+        "PvP",
+        "Great Soundtrack",
+        "Violent",
+        "3D",
+        "Character Customization",
+        "Family Friendly"
+      ],
+      "languages": {
+        "audio": [],
+        "interface": [],
+        "subtitles": []
+      }
+    },
+    "content": {
+      "short_description": "THE CRITICALLY ACCLAIMED FANTASY ACTION RPG. Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring and become an Elden Lord in the Lands Between.",
+      "detailed_description": "<div class=\"game_area_description\" data-panel='{\"type\":\"PanelGroup\"}' id=\"game_area_reviews\">\n<h2>Reviews</h2>\n<p>“Put a ring on it.”<br/>10/10 – <a href=\"https://www.ign.com/articles/elden-ring-review\" rel=\"\" target=\"_blank\">IGN</a><br/><br/>“An unmissable open-world masterpiece.”<br/>10/10 – <a href=\"https://steamcommunity.com/linkfilter/?u=https%3A%2F%2Fwww.gamingbible.co.uk%2Freviews%2Felden-ring-review-fromsoftwares-latest-is-a-modern-masterpiece-20220222%23%3A~%3Atext%3DElden%2520Ring%2520is%2520a%2520constantly%2Coff%2520to%2520an%2520incredible%2520start.\" rel=\"noopener\" target=\"_blank\">Gaming Bible</a><br/><br/>“Exploration is jaw dropping.”<br/>5/5 – <a href=\"https://steamcommunity.com/linkfilter/?u=https%3A%2F%2Fwww.gamesradar.com%2Felden-ring-review%2F\" rel=\"noopener\" target=\"_blank\">Games Radar</a><br/></p>\n</div>",
+      "dlc_count": 0
+    },
+    "media": {
+      "header_image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg?t=1744748041",
+      "screenshots": [
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_943bf6fe62352757d9070c1d33e50b92fe8539f1.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_dcdac9e4b26ac0ee5248bfd2967d764fd00cdb42.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_3c41384a24d86dddd58a8f61db77f9dc0bfda8b5.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_e0316c76f8197405c1312d072b84331dd735d60b.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_ef61b771ee6b269b1f0cb484233e07a0bfb5f81b.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_b1b91299d7e4b94201ac840aa64de54d9f5cb7f3.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_510a02cf3045e841e180f2b77fb87545e0c8b59d.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_c494372930ca791bdc6221eca134f2270fb2cb9f.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_fa6b881ef7c30522012ab2b2b83001e79baee093.1920x1080.jpg?t=1744748041",
+        "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_c2baf8aada6140beee79d701d14043899e91af47.1920x1080.jpg?t=1744748041"
+      ],
+      "background_color": null
+    },
+    "technical": {
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "controller_support": null,
+      "vr_support": true
+    },
+    "timestamp": "2025-04-28T19:54:08.150602+00:00"
+  }
+]
